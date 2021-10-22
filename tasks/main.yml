@@ -1,0 +1,9 @@
+---
+# tasks file for preasterisk#
+- name: Preparing the Asterisk server
+  include_tasks: 01-preparing.yml
+  args:
+    apply:
+      tags: preparing
+  tags: preparing
+...

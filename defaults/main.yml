@@ -1,0 +1,22 @@
+---
+# defaults file for preasterisk
+asterisk_version: 18
+asterisk_user: asteriskpbx
+asterisk_user_password: asteriskpbx
+asterisk_fw_service: 
+ - asterisk
+ - tftp
+ - http
+ - https
+
+asterisk_bin_url: "http://downloads.asterisk.org/pub/telephony/asterisk/asterisk-{{ asterisk_version }}-current.tar.gz"
+asterisk_bin_dir: /usr/src/asterisk
+asterisk_dir_structure:
+  - "{{ asterisk_bin_dir }}"
+  - /var/run/asterisk
+  - /etc/asterisk
+  - /var/lib/asterisk
+  - /var/log/asterisk
+  - /var/spool/asterisk
+  - /usr/lib64/asterisk
+  - /var/www/

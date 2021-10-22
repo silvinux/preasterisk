@@ -1,0 +1,5 @@
+---
+- hosts: pbx
+  remote_user: root
+  roles:
+    - preasterisk

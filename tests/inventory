@@ -1,0 +1,5 @@
+[local]
+localhost connection=local
+
+[pbx]
+pbx.lab.example.com

@@ -1,0 +1,73 @@
+---
+- name: Ensuring the basic packages are present
+  ansible.builtin.package:
+    state: present
+    name:
+      - git
+      - vim
+      - tar
+      - unzip
+
+- name: Ensuring the password for hacluster is configured 
+  ansible.builtin.user:
+    name: "{{ asterisk_user }}"
+    password: "{{ asterisk_user_password | password_hash('sha512') }}"
+
+- name: Create directory structure
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+    owner: "{{ asterisk_user }}"
+    group: "{{ asterisk_user }}"
+  loop: "{{ asterisk_dir_structure }}"
+  vars:
+    asterisk_dir_structure:
+      - "{{ asterisk_bin_dir }}"
+      - /var/run/asterisk
+      - /etc/asterisk
+      - /var/lib/asterisk
+      - /var/log/asterisk
+      - /var/spool/asterisk
+      - /usr/lib64/asterisk
+      - /var/www/
+    
+- name: Download Asterisk Binaries
+  ansible.builtin.get_url:
+    url: "{{ asterisk_bin_url }}"
+    dest: "{{ asterisk_bin_dir }}"
+    mode: '0440'
+
+- name: Unarchive Asterisk Binaries under "{{ asterisk_bin_dir }}"
+  ansible.builtin.unarchive:
+    src: "{{ asterisk_bin_dir }}/asterisk-{{ asterisk_version }}-current.tar.gz"
+    dest: "{{ asterisk_bin_dir }}"
+    remote_src: yes
+
+- name: Copy Asterisk firewall Ports definition
+  ansible.builtin.copy:
+    src: files/asterisk.xml
+    dest: /etc/firewalld/services/asterisk.xml
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Load Asterisk firewall service
+  ansible.builtin.service:
+    name: firewalld
+    state: reloaded
+
+- name: Ensuring the required ports are open 
+  ansible.posix.firewalld:
+    service: "{{ asterisk_fw_service }}"
+    permanent: yes
+    state: enabled
+    immediate: yes
+  loop: "{{ asterisk_fw_service }}"
+
+#- name: Ensuring the pcsd service is started and enabled 
+#  service:
+#    name: pcsd
+#    state: started
+#    enabled: yes
+...

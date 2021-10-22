@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<service>
+  <short>ASTERISK</short>
+  <description>Asterisk firewall ports.</description>
+  <port protocol="tcp" port="5060"/>
+  <port protocol="tcp" port="5061"/>
+  <port protocol="tcp" port="5038"/>
+  <port protocol="udp" port="5060"/>
+  <port protocol="udp" port="5061"/>
+  <port protocol="udp" port="4569"/>
+  <port protocol="udp" port="16384-16482"/>
+  <module name="nf_conntrack_sip"/>
+</service>
